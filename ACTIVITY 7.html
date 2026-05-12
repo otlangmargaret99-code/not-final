@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity 7 - SOUR Era</title>
+    <link rel="icon" href="olivia.png" type="image/png">
+    <style>
+        /* DARK SOUR THEME VARIABLES */
+        :root {
+            --sour-lavender: #b19cd9;
+            --sour-soft-blue: #a2d2ff;
+            --sour-dark-bg: #0d0b14; 
+            --sour-card-bg: #1a1625; 
+            --sour-text-light: #f3f0ff;
+            --sour-accent-yellow: #fdfd96;
+            --sour-muted: #6b5b95;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            color: var(--sour-text-light); 
+            background-color: var(--sour-dark-bg);
+            background-image: radial-gradient(rgba(177, 156, 217, 0.1) 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            overflow-x: hidden;
+        }
+
+        /* NAV */
+        nav {
+            position: sticky; top: 0; z-index: 999;
+            background: rgba(13, 11, 20, 0.9);
+            backdrop-filter: blur(12px);
+            display: flex; gap: 10px; padding: 15px 30px;
+            flex-wrap: wrap; border-bottom: 4px solid var(--sour-muted);
+        }
+        nav a {
+            color: var(--sour-lavender); text-decoration: none; font-size: 12px;
+            font-weight: 700; padding: 8px 14px;
+            border: 2px solid var(--sour-lavender); border-radius: 8px;
+            transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;
+        }
+        nav a:hover { background: var(--sour-lavender); color: var(--sour-dark-bg); transform: rotate(-2deg); }
+
+        /* LOGIN GATE */
+        #login-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            background: var(--sour-dark-bg);
+            display: flex; align-items: center; justify-content: center;
+        }
+        #main-content { display: none; }
+        .login-box {
+            background: var(--sour-card-bg); 
+            border: 2px solid var(--sour-lavender);
+            border-radius: 12px; padding: 50px; width: 400px;
+            text-align: center; box-shadow: 0 0 30px rgba(177, 156, 217, 0.2);
+        }
+        .login-box h1 { font-size: 32px; margin-bottom: 8px; color: var(--sour-lavender); font-family: cursive; }
+        .login-box p { color: var(--sour-text-light); font-size: 14px; margin-bottom: 30px; opacity: 0.8; }
+        .login-box input {
+            width: 100%; padding: 14px 18px; margin-bottom: 16px;
+            border-radius: 8px; border: 1px solid var(--sour-muted);
+            background: rgba(0,0,0,0.3); color: white;
+            font-size: 15px; outline: none;
+        }
+        .login-box button {
+            width: 100%; padding: 14px; background: var(--sour-lavender); color: var(--sour-dark-bg);
+            font-weight: 800; font-size: 16px; border: none;
+            border-radius: 8px; cursor: pointer; transition: 0.3s;
+        }
+        .login-box button:hover { background: var(--sour-accent-yellow); transform: scale(1.02); }
+        .error-msg { color: #ff4d4d; font-size: 13px; margin-bottom: 12px; display: none; font-weight: bold; }
+
+        /* PAGES */
+        .page { display: none; width: 100%; min-height: 100vh; padding-bottom: 150px; }
+
+        /* PAGE 1: ACT 5 */
+        #page1 { display: flex; align-items: center; justify-content: center; position: relative; }
+        #page1::after {
+            content: "SOUR"; position: absolute; right: 20px; bottom: 20px;
+            font-size: 180px; font-weight: 900; color: rgba(177, 156, 217, 0.05);
+            pointer-events: none; font-family: cursive;
+        }
+        .hero-container { max-width: 1100px; padding: 40px; z-index: 2; }
+        .hero-sticker-box {
+            background: var(--sour-card-bg); padding: 40px; border: 2px solid var(--sour-lavender);
+            box-shadow: 15px 15px 0px rgba(177, 156, 217, 0.1); transform: rotate(-1deg);
+        }
+        .hero-title { font-size: clamp(35px, 7vw, 70px); line-height: 1.1; margin-bottom: 25px; font-weight: 900; color: white; }
+        .hero-title span { background: var(--sour-muted); padding: 0 10px; color: var(--sour-accent-yellow); }
+        .hero-sub { 
+            font-size: 20px; color: var(--sour-text-light); 
+            max-width: 600px; line-height: 1.6; border-left: 5px solid var(--sour-lavender); padding-left: 25px; opacity: 0.8;
+        }
+
+        /* PAGE 2: ACT 4 - STYLES COMBINED */
+        #page2 { flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        
+        .scroll-text {
+            background: var(--sour-lavender); color: var(--sour-dark-bg); 
+            padding: 15px 0; font-size: 24px; font-weight: 900; width: 100%;
+            white-space: nowrap; animation: scrolling 25s linear infinite;
+            text-transform: uppercase; letter-spacing: 2px; position: absolute; top: 10%;
+        }
+        @keyframes scrolling { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        
+        .album-art {
+            width: 350px; border: 12px solid white; border-bottom: 60px solid white;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7); transform: rotate(-2deg); margin-bottom: 40px; margin-top: 80px;
+        }
+        .audio-box { 
+            background: var(--sour-card-bg); padding: 30px; border-radius: 20px; 
+            border: 2px solid var(--sour-lavender); text-align: center;
+        }
+        .soft2-title { color: var(--sour-lavender); margin-bottom: 15px; font-size: 22px; font-weight: 800; }
+        audio { width: 100%; }
+
+        /* ACT 2 & 3 - BUTTON PAGES */
+        #page3, #page4 { flex-direction: column; align-items: center; justify-content: center; }
+        .act-header { margin-bottom: 40px; text-align: center;}
+        .act-header h2 { font-size: 24px; color: var(--sour-lavender); text-transform: uppercase; border-bottom: 4px solid var(--sour-muted); display: inline-block; }
+        .btn-grid { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; max-width: 1000px; padding: 20px; }
+
+        /* BUTTON BASE STYLES */
+        .uberbutton { background:black; color:white; padding:15px 30px; border: 1px solid #333; cursor: pointer; font-size: 16px; }
+        .amazonbutton { background:#ffd814; color:#000; padding:15px 30px; border:none; border-radius:50px; cursor: pointer; font-size: 16px; }
+        .githubbutton { background:#2ea44f; color:white; padding:15px 30px; border:none; border-radius:8px; font-weight:bold; cursor: pointer; font-size: 16px; }
+        .bootstrapbutton { background:#7952b3; color:white; padding:15px 30px; border:none; border-radius:5px; font-weight:bold; cursor: pointer; font-size: 16px; }
+        .downloadbutton { background:transparent; color:#f3f0ff; padding:15px 30px; border:1px solid #6c757d; border-radius:5px; font-weight:bold; cursor: pointer; font-size: 16px; }
+        .linkedinbutton { background:#0a66c2; color:white; padding:15px 30px; border:none; border-radius:50px; font-weight:bold; cursor: pointer; font-size: 16px; }
+        .savebutton { background:transparent; color:#a2d2ff; padding:15px 30px; border:1px solid #0a66c2; border-radius:50px; font-weight:bold; cursor: pointer; font-size: 16px; }
+
+        /* HOVER EFFECTS */
+        #page3 .btn-grid button { transition: all 0.3s ease; }
+        #page3 .uberbutton:hover { background: #222; box-shadow: 0 0 15px rgba(255, 255, 255, 0.1); }
+        #page3 .amazonbutton:hover { background: #f7ca00; box-shadow: 0 0 15px rgba(255, 216, 20, 0.4); }
+        #page3 .githubbutton:hover { background: #2c974b; box-shadow: 0 4px 15px rgba(46, 164, 79, 0.4); }
+        #page3 .bootstrapbutton:hover { background: #614092; box-shadow: 0 4px 15px rgba(121, 82, 179, 0.4); }
+        #page3 .downloadbutton:hover { background: #f3f0ff; color: black; box-shadow: 0 0 15px rgba(243, 240, 255, 0.2); }
+        #page3 .linkedinbutton:hover { background: #004182; box-shadow: 0 4px 15px rgba(10, 102, 194, 0.4); }
+        #page3 .savebutton:hover { background: rgba(162, 210, 255, 0.1); border-width: 2px; }
+
+        /* PAGINATION BAR */
+        .pagination-bar {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--sour-card-bg); 
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; padding: 12px 25px; border-radius: 12px;
+            border: 2px solid var(--sour-lavender); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .page-btn {
+            width: 40px; height: 40px; cursor: pointer;
+            border: 1px solid var(--sour-muted);
+            color: var(--sour-lavender);
+            background: transparent; border-radius: 4px;
+            font-weight: 800; transition: 0.3s;
+        }
+        .nav-btn {
+            background: transparent; border: none; color: var(--sour-text-light);
+            cursor: pointer; font-weight: bold; font-size: 14px; padding: 0 10px;
+        }
+        .page-btn:hover, .page-btn.active {
+            background: var(--sour-lavender); color: var(--sour-dark-bg);
+            transform: translateY(-3px); border-color: var(--sour-lavender);
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="login-screen">
+    <div class="login-box">
+        <h1>it's brutal out here 🦋</h1>
+        <p>The SOUR Experience</p>
+        <div class="error-msg" id="error-msg">Don't leave me hanging! Fill the fields.</div>
+        <input type="text" id="username" placeholder="User">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="doLogin()">Unlock SOUR</button>
+    </div>
+</div>
+
+<div id="main-content">
+
+<nav>
+    <a href="#" onclick="goTo(1);return false;">ACT 5 - HERO</a>
+    <a href="#" onclick="goTo(2);return false;">ACT 4 - IMAGES & AUDIO</a>
+    <a href="#" onclick="goTo(3);return false;">ACT 3 - HOVER & SHADOW</a>
+    <a href="#" onclick="goTo(4);return false;">ACT 2 - CSS BASIC</a>
+</nav>
+
+<div class="page" id="page1">
+    <div class="hero-container">
+        <div class="hero-sticker-box">
+            <h1 class="hero-title">Do you get <span>deja vu</span>?</h1>
+            <p class="hero-sub">Step back into the unfiltered world of the SOUR era. Experience the raw emotion and cinematic storytelling of the album that redefined the modern pop landscape.</p>
+        </div>
+    </div>
+</div>
+
+<div class="page" id="page2">
+    <div class="scroll-text"> SOUR • good 4 u • traitor • drivers license • deja vu </div>
+    
+    <img src="sour_cover.jpg" alt="SOUR Album Art" class="album-art">
+    
+    <div class="audio-box">
+        <h2 class="soft2-title">Now Playing: good 4 u</h2>
+        <audio controls>
+            <source src="good4u.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+</div>
+
+<div class="page" id="page3">
+    <div class="act-header"><h2>ACT 3 - HOVER & SHADOW</h2></div>
+    <div class="btn-grid">
+        <button class="uberbutton">Request now</button>
+        <button class="amazonbutton">Add to cart</button>
+        <button class="githubbutton">Sign up</button>
+        <button class="bootstrapbutton">Get started</button>
+        <button class="downloadbutton">Download</button>
+        <button class="linkedinbutton">Apply on company website</button>
+        <button class="savebutton">Save</button>
+    </div>
+</div>
+
+<div class="page" id="page4">
+    <div class="act-header"><h2>ACT 2 - CSS BASIC</h2></div>
+    <div class="btn-grid">
+        <button class="uberbutton">Request now</button>
+        <button class="amazonbutton">Add to cart</button>
+        <button class="githubbutton">Sign up</button>
+        <button class="bootstrapbutton">Get started</button>
+        <button class="downloadbutton">Download</button>
+        <button class="linkedinbutton">Apply on company website</button>
+        <button class="savebutton">Save</button>
+    </div>
+</div>
+
+<div class="pagination-bar">
+    <button class="nav-btn" onclick="prev()">← Prev</button>
+    <button class="page-btn" id="btn1" onclick="goTo(1)">1</button>
+    <button class="page-btn" id="btn2" onclick="goTo(2)">2</button>
+    <button class="page-btn" id="btn3" onclick="goTo(3)">3</button>
+    <button class="page-btn" id="btn4" onclick="goTo(4)">4</button>
+    <button class="nav-btn" onclick="next()">Next →</button>
+</div>
+
+</div>
+
+<script>
+let current = 0;
+const totalPages = 4;
+
+function doLogin(){
+    let u=document.getElementById('username').value;
+    let p=document.getElementById('password').value;
+    if(!u||!p){
+        document.getElementById('error-msg').style.display='block';
+        return;
+    }
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('main-content').style.display='block';
+    goTo(1);
+}
+
+function goTo(n){
+    if(current){
+        document.getElementById('page'+current).style.display='none';
+        document.getElementById('btn'+current).classList.remove('active');
+    }
+    current=n;
+    document.getElementById('page'+n).style.display='flex';
+    document.getElementById('btn'+n).classList.add('active');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function prev() { let target = current - 1; if (target < 1) target = totalPages; goTo(target); }
+function next() { let target = current + 1; if (target > totalPages) target = 1; goTo(target); }
+</script>
+
+</body>
+</html>
